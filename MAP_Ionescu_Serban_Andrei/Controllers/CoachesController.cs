@@ -67,7 +67,7 @@ namespace MAP_Ionescu_Serban_Andrei.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CoachID,PersonalStatsID,CoachName,CoachCountry,debutYear")] Coach coach)
+        public async Task<IActionResult> Create([Bind("CoachID,CoachName,CoachCountry,debutYear,PersonalStatsID")] Coach coach)
         {
             ViewData["PersonalStatsID"] = new SelectList(_context.PersonalStats, "PersonalStatsID", "Description");
             if (!ModelState.IsValid) return View(coach);
@@ -104,7 +104,7 @@ namespace MAP_Ionescu_Serban_Andrei.Controllers
                 return NotFound();
             }
 
-            return View(customer);
+            return View(coach);
         }
 
         // POST: Coaches/Edit/5
@@ -112,73 +112,76 @@ namespace MAP_Ionescu_Serban_Andrei.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CoachID,PersonalStatsID,CoachName,CoachCountry,debutYear")] Coach coach)
+        public async Task<IActionResult> Edit(int id)
         {
-            if (id != coach.CoachID)
+
+            if (id == null)
             {
                 return NotFound();
             }
+            var coachToUpdate = await _context.Coaches.FirstOrDefaultAsync(s => s.CoachID == id);
+            ViewData["PersonalStatsID"] = new SelectList(_context.PersonalStats, "PersonalStatsID", "Description");
 
-            if (ModelState.IsValid)
+            if (await TryUpdateModelAsync<Coach>(
+                coachToUpdate,
+                "",
+                s => s.CoachName, s => s.CoachCountry, s => s.debutYear, s => s.PersonalStatsID))
             {
                 try
                 {
-                    _context.Update(coach);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!CoachExists(coach.CoachID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["PersonalStatsID"] = new SelectList(_context.PersonalStats, "PersonalStatsID", "Description", coach.PersonalStatsID);
-            return View(coach);
+            return View(coachToUpdate);
         }
 
         // GET: Coaches/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Coaches == null)
+            if (id == null)
             {
-                return NotFound();
+                return new BadRequestResult();
             }
-
-            var coach = await _context.Coaches
-                .Include(c => c.PersonalStats)
-                .FirstOrDefaultAsync(m => m.CoachID == id);
-            if (coach == null)
+            var client = new HttpClient();
+            var response = await client.GetAsync($"{baseUrl}/{id.Value}");
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var coach = await _context.Coaches.Include(b => b.PersonalStats).AsNoTracking()
+                    .FirstOrDefaultAsync(m => m.CoachID == id);
+                return View(coach);
             }
-
-            return View(coach);
+            return new NotFoundResult();
         }
 
         // POST: Coaches/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([Bind("CoachID")] Coach coach)
         {
-            if (_context.Coaches == null)
+            try
             {
-                return Problem("Entity set 'BasketballContext.Coaches'  is null.");
+                var client = new HttpClient();
+                HttpRequestMessage request =
+                new HttpRequestMessage(HttpMethod.Delete,
+                $"{baseUrl}/{coach.CoachID}")
+                {
+                    Content = new StringContent(JsonConvert.SerializeObject(coach),
+                Encoding.UTF8, "application/json")
+                };
+                var response = await client.SendAsync(request);
+                return RedirectToAction("Index");
             }
-            var coach = await _context.Coaches.FindAsync(id);
-            if (coach != null)
+            catch (Exception ex)
             {
-                _context.Coaches.Remove(coach);
+                ModelState.AddModelError(string.Empty, $"Unable to delete record:{ex.Message}");
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return View(coach);
         }
 
         private bool CoachExists(int id)
