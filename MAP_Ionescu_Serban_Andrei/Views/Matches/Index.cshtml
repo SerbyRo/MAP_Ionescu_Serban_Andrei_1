@@ -1,0 +1,118 @@
+﻿@model MAP_Ionescu_Serban_Andrei.Models.LibraryViewModels.MatchIndexData
+@{
+    ViewData["Title"] = "Matches";
+}
+<h2>Matches</h2>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Opposite team</th>
+            <th>Minutes played</th>
+            <th>Marked points</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Matches)
+        {
+            string selectedRow = "";
+            if (item.MatchID == (int?)ViewData["MatchID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.oppositeTeam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.minutesPlayed)
+                </td>
+                <td>
+                    @{
+                        foreach (var baller in item.Positions)
+                        {
+                            @baller.Baller.BallerID @: @baller.Baller.BallerName <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.MatchID">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.MatchID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.MatchID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MatchID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Ballers != null)
+{
+    <h3>Ballers who played in a given match</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Baller Name</th>
+            <th>Team name</th>
+            <th>TShirt Number</th>
+            
+        </tr>
+        @foreach (var item in Model.Ballers)
+        {
+            string selectedRow = "";
+            if (item.BallerID == (int?)ViewData["BallerID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select","Index", new {ballerID = item.BallerID})
+                    <!-- <a asp-action="Index" asp-route-id="@item.BallerID">Select</a>-->
+                </td>
+                <td>
+                    @item.BallerName
+                </td>
+                <td>
+                    @item.Team.Nickname
+                </td>
+                <td>
+                    @item.TShirtNumber
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@if (Model.GamePlans != null)
+{
+        <h3>Coaches for the selected baller</h3>
+        <table class="table">
+            <tr>
+                <th>Coach name</th>
+                <th>Coach country</th>
+                <th>Debut year</th>
+            </tr>
+        @foreach (var item in Model.GamePlans)
+        {
+            string selectedRow = "";
+            if (item.BallerID == (int?)ViewData["BallerID"])
+            {
+                selectedRow = "success";
+            }
+                    <tr class="@selectedRow">
+                        <td>
+                    @item.Coach.CoachName
+                        </td>
+                        <td>
+                    @item.Coach.CoachCountry
+                        </td>
+                        <td>
+                    @item.Coach.debutYear
+                        </td>
+                    </tr>
+        }
+        </table>
+}

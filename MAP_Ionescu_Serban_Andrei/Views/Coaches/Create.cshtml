@@ -1,0 +1,47 @@
+﻿@model MAP_Ionescu_Serban_Andrei.Models.Coach
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Coach</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PersonalStatsID" class="control-label"></label>
+                <select asp-for="PersonalStatsID" class ="form-control" asp-items="ViewBag.PersonalStatsID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoachName" class="control-label"></label>
+                <input asp-for="CoachName" class="form-control" />
+                <span asp-validation-for="CoachName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CoachCountry" class="control-label"></label>
+                <input asp-for="CoachCountry" class="form-control" />
+                <span asp-validation-for="CoachCountry" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="debutYear" class="control-label"></label>
+                <input asp-for="debutYear" class="form-control" />
+                <span asp-validation-for="debutYear" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

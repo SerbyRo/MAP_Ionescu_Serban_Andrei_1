@@ -1,0 +1,26 @@
+﻿@model IEnumerable<MAP_Ionescu_Serban_Andrei.Models.LibraryViewModels.BallerGroup>
+@{
+    ViewData["Title"] = "Ballers Statistics";
+}
+<h2>Ordered Books Statistics</h2>
+<table>
+    <tr>
+        <th>
+            Max TShirt Number
+        </th>
+        <th>
+            Displauyed Ballers
+        </th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.maxTShirtNumber)
+            </td>
+            <td>
+                @item.BallerCount
+            </td>
+        </tr>
+    }
+</table>

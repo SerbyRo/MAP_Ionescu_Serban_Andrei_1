@@ -1,0 +1,53 @@
+﻿@model IEnumerable<MAP_Ionescu_Serban_Andrei.Models.Coach>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonalStats)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoachName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoachCountry)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.debutYear)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonalStats.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoachName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CoachCountry)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.debutYear)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CoachID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CoachID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CoachID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
