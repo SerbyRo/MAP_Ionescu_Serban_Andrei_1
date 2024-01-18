@@ -9,9 +9,11 @@ using MAP_Ionescu_Serban_Andrei.Data;
 using MAP_Ionescu_Serban_Andrei.Models;
 using MAP_Ionescu_Serban_Andrei.Models.LibraryViewModels;
 using System.Security.Policy;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MAP_Ionescu_Serban_Andrei.Controllers
 {
+    [Authorize(Policy = "OnlyVeterans")]
     public class MatchesController : Controller
     {
         private readonly BasketballContext _context;

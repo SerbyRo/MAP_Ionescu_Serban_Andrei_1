@@ -9,9 +9,11 @@ using MAP_Ionescu_Serban_Andrei.Data;
 using MAP_Ionescu_Serban_Andrei.Models;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MAP_Ionescu_Serban_Andrei.Controllers
 {
+    [Authorize(Policy ="VeteranManager")]
     public class CoachesController : Controller
     {
         private readonly BasketballContext _context;

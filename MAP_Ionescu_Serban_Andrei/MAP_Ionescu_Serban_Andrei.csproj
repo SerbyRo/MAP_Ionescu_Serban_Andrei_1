@@ -7,8 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20240117124320_InitialCreate.cs" />
+    <Compile Remove="Migrations\20240117124320_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20240117130325_CreateStatsTable.cs" />
+    <Compile Remove="Migrations\20240117130325_CreateStatsTable.Designer.cs" />
+    <Compile Remove="Migrations\BasketballContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.15" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.15">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -20,6 +30,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BasketModel\BasketModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\Identity\" />
   </ItemGroup>
 
 </Project>

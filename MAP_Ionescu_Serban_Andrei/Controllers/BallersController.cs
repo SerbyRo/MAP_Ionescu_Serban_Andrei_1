@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MAP_Ionescu_Serban_Andrei.Data;
 using MAP_Ionescu_Serban_Andrei.Models;
-using static System.Reflection.Metadata.BlobBuilder;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MAP_Ionescu_Serban_Andrei.Controllers
 {
+    [Authorize(Roles ="Employee")]
     public class BallersController : Controller
     {
         private readonly BasketballContext _context;
@@ -21,6 +22,7 @@ namespace MAP_Ionescu_Serban_Andrei.Controllers
         }
 
         // GET: Ballers
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder,string currentFilter,string searchString,int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
@@ -63,6 +65,7 @@ namespace MAP_Ionescu_Serban_Andrei.Controllers
         }
 
         // GET: Ballers/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Ballers == null)
